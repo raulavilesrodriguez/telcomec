@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Compare Data
+{% endblock %}
+
+{% block mensaje %}
+    Welcome {{usuario}}
+{% endblock %}
+
+{% block main %}
+
+    <form action="/update" method="post" id="formulario1">
+        <div class="form-group">
+            <h5>Compare with other service</h5>
+            <select name="service1" class="form-control">
+                <option disable selected value="">Telecom Services 1</option>
+                <option value="SMA">SMA (Mobile services)</option>
+                <option value="telefonia_fija">Fixed telephony</option>
+                <option value="Internet_Fijo">Fixed internet</option>
+                <option value="Internet_Movil">Mobile internet</option>
+                <option value="Portadores_Enlaces">Portador Service</option>
+                <option value="AVS">Audio Video Service</option>
+            </select>
+
+            <select name="service2" class="form-control">
+                <option disable selected value="">Telecom Services 2</option>
+                <option value="SMA">SMA (Mobile services)</option>
+                <option value="telefonia_fija">Fixed telephony</option>
+                <option value="Internet_Fijo">Fixed internet</option>
+                <option value="Internet_Movil">Mobile internet</option>
+                <option value="Portadores_Enlaces">Portador Service</option>
+                <option value="AVS">Audio Video Service</option>
+            </select>
+        </div>
+        <button class="btn btn-primary" type="submit" id="btn1">Submit</button>
+    </form>
+
+    <hr />
+
+    <h5 id="titulo2"><strong>{{label1}} {{versus}} {{label2}}</strong></h5>
+    <div class="chart-container">
+        <canvas id="myChart2"></canvas>
+    </div>
+
+    <hr />
+
+    <section id="tabla-datos">
+        <div class="container data-analysis">
+            <h5><strong>Data Analysis of {{label1}} - {{label2}}</strong></h5>
+            <table class="table table-bordered table-hover">
+                <thead>
+                     <tr>
+                        <th>Indicator</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Correlation Level (period 2015-2020):</td>
+                        <td>{{'{:,.2f}'.format(correlacion) if correlacion is defined}}</td>
+                    </tr>
+                    <tr>
+                        <td>CAGR of {{label1}}:</td>
+                        <td>{{'{:,.2f}'.format(tacc_datos1) if tacc_datos1 is defined}}%</td>
+                    </tr>
+                    <tr>
+                        <td>CAGR of {{label2}}:</td>
+                        <td>{{'{:,.2f}'.format(tacc_datos2) if tacc_datos2 is defined}}%</td>
+                    </tr>
+                    <tr>
+                        <td>Connections of {{label1}} year 2020</td>
+                        <td>{{'{:,.0f}'.format(datos1_last) if datos1_last is defined}}</td>
+                    </tr>
+                    <tr>
+                        <td>Connections of {{label2}} year 2020</td>
+                        <td>{{'{:,.0f}'.format(datos2_last) if datos2_last is defined}}</td>
+                    </tr>
+                    <tr>
+                        <td>Density of {{label1}} year 2020</td>
+                        <td>{{'{:,.0f}'.format(density1) if density1 is defined}}</td>
+                    </tr>
+                    <tr>
+                        <td>Density of {{label2}} year 2020</td>
+                        <td>{{'{:,.0f}'.format(density2) if density2 is defined}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <hr />
+    <h5 id="titulo2"><strong>{{densidad}} {{label1}} {{versus}} {{label2}}</strong></h5>
+    <div class="chart-container">
+        <canvas id="historic_density"></canvas>
+    </div>
+
+
+
+    <script>
+        const label_x = JSON.parse('{{x|tojson if x is defined}}');
+        const datos1 = JSON.parse('{{datos1|tojson if datos1 is defined}}');
+        const datos2 = JSON.parse('{{datos2|tojson if datos2 is defined}}');
+        const label1 = '{{label1 if label1 is defined}}';
+        const label2 = '{{label2 if label2 is defined}}';
+
+        const historic_density1 = JSON.parse('{{historic_density1|tojson if historic_density1 is defined}}');
+        const historic_density2 = JSON.parse('{{historic_density2|tojson if historic_density2 is defined}}');
+
+        // Graph data series
+        $(document).ready(function() {
+            comparacion_grafico(label_x, datos1, datos2, label1, label2);
+            density(label_x, historic_density1, historic_density2, label1, label2);
+        });
+
+        // show data table
+        const x = datos1.length;
+        console.log(x);
+        if (x) {
+            document.getElementById("tabla-datos").style.display = "block";
+        };
+
+    </script>
+
+
+
+
+{% endblock %}

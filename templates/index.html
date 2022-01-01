@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block mensaje %}
+    Welcome {{usuario}}
+{% endblock %}
+
+{% block main %}
+    <h5 style="margin-bottom:20px;"><strong>Telecommunications-Ecuador</strong></h5>
+
+
+    <div class="container-fluid">
+          <p>
+            <strong><span style="color:blue;">Find </span>
+            <span style="color:red;">the </span>
+            <span style="color:green;">service </span>
+            <span style="color:yellow;">to </span>
+            <span style="color:red;">analyze: </span></strong>
+          </p>
+            <input class="form-control input-campo" id="servicio-busqueda" type="text" placeholder="&#xf002; Search">
+    </div>
+
+    <div class="layout-margin-8 mt-4">
+        <div class="card-deck">
+            <div class="card text-center">
+              <canvas id="myChart" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Mobile service - SMA</h5>
+                <p class="card-text">Historical growth of mobile service users - SMA</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+
+            <div class="card text-center">
+              <canvas id="myFixed" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Fixed telephony</h5>
+                <p class="card-text">Historical growth of Fixed telephony</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-margin-8 mt-4">
+        <div class="card-deck">
+            <div class="card text-center">
+              <canvas id="myFixedInternet" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Fixed Internet</h5>
+                <p class="card-text">Historical growth of Fixed Internet</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+
+            <div class="card text-center">
+              <canvas id="myMobileInternet" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Mobile Internet</h5>
+                <p class="card-text">Historical growth of Mobile Internet</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layout-margin-8 mt-4">
+        <div class="card-deck">
+            <div class="card text-center">
+              <canvas id="myTrunkingTerminales" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Portador Service</h5>
+                <p class="card-text">Historical growth of Portador Service - Connections</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+
+            <div class="card text-center">
+              <canvas id="myAVS" width="600" height="400"></canvas>
+              <div class="card-body">
+                <h5 class="card-title">Video Service -AVS</h5>
+                <p class="card-text">Historical growth of Video Service - AVS</p>
+                <a href="#" class="btn btn-primary" onclick="location.href='/update';">Analyze</a>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const x = JSON.parse('{{x|tojson}}');
+        const sma = JSON.parse('{{sma|tojson}}');
+        const fixed_phone = JSON.parse('{{fixed_phone|tojson}}');
+        const fixed_internet = JSON.parse('{{fixed_internet|tojson}}');
+        const mobile_internet = JSON.parse('{{mobile_internet|tojson}}');
+        const portador_enlaces = JSON.parse('{{portador_enlaces|tojson}}');
+        const audio_video = JSON.parse('{{audio_video|tojson}}');
+
+        $(document).ready(function() {
+          grafico_sma(x, sma);
+          grafico_fixed_phone(x, fixed_phone);
+          grafico_fixed_internet(x, fixed_internet);
+          grafico_mobile_internet(x, mobile_internet);
+          grafico_portador_enlaces(x, portador_enlaces);
+          grafico_audio_video(x, audio_video);
+        });
+
+    </script>
+
+    <script>
+          // source: https://gist.github.com/jakebresnehan/2288330
+          jQuery.expr[':'].contains = function(a, i, m) {
+            return jQuery(a).text().toUpperCase()
+                .indexOf(m[3].toUpperCase()) >= 0;
+          };
+
+          $('#servicio-busqueda').keyup(function (){
+              $('.card').removeClass('d-none');
+              var filter = $(this).val(); // get the value of the input, which we filter on
+              $('.card-deck').find('.card .card-body h5:not(:contains("'+filter+'"))').parent().parent().addClass('d-none');
+          });
+
+          // place search icon inside input
+          $('#servicio-busqueda').on('keyup', function() {
+              var input = $(this);
+              if(input.val().length === 0) {
+                  input.addClass('input-campo');
+              } else {
+                  input.removeClass('input-campo');
+              }
+          });
+
+      </script>
+
+{% endblock %}
